@@ -1,0 +1,391 @@
+/* Background */
+body {
+    background-color: var(--back);
+}
+
+:root {
+    --titleTextFont: courier;
+    --denseTextFont: helvetica;
+}
+/* All Text */
+h1, h2, h3, p, #inForm{
+    font-family : var(--titleTextFont);
+    text-align : center;
+    color : var(--highContrast);
+}
+
+p {
+    font-size: 16px;
+}
+/* Element Specific */
+h1 {
+    font-size : 50px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size : 20px;
+}
+
+.inFormSearch {
+    background-color : var(--lowContrast);
+    border: none;
+    border-radius: 30px;
+    font-size : 16px;
+    margin-bottom: 10px;
+    height: 40px;
+    display: inline-flex;
+}
+
+::placeholder {
+    color: var(--back);
+}
+
+#inFormSearchBar {
+    width : 100%;
+    background: none;
+    color : var(--back);
+    font-size: 16px;
+    font-family : var(--titleTextFont);
+    text-align: center;
+    border: none;
+    height: 100%;
+    outline: none;
+}
+
+#inFormKeyBar {
+    width : 30%;
+    background: none;
+    color : var(--back);
+    font-size: 16px;
+    font-family : var(--titleTextFont);
+    text-align: center;
+    border: none;
+    height: 100%;
+    outline: none;
+}
+
+#tinyLine {
+    background-color: var(--back);
+    width : 0.5%;
+    height: 70%;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 30px;
+}
+
+#slider {
+    -webkit-appearance: none;
+    width: 20%;
+    height: 15px;
+    background: var(--lowContrast);
+    border-radius: 30px;
+    outline: none;
+}
+
+.awesomplete > ul {
+    color : var(--highContrast);
+}
+
+.styleButton{
+    background-color : var(--mid);
+    color : var(--back);
+    border : none;
+    font-family : var(--titleTextFont);
+    border-radius : 20px;
+    margin-top: 10px;
+    font-size : 16px;
+    padding : 10px;
+}
+
+#searchButton{
+    width : 5%;
+}
+
+.styleButton:hover{
+    cursor: pointer;
+    background-color: var(--lowContrast);
+}
+
+.styleButton:focus{
+    outline: none;
+}
+
+#Output {
+    text-align: center;
+}
+
+.outputCard {
+    border : 2px solid var(--highContrast);
+    border-radius : 10px;
+    width: 70%;
+    text-align: center;
+    display: inline-flex;
+    margin: 5px;
+    padding: 10px;
+    z-index: -1;
+}
+
+.outputCard:hover {
+    cursor: pointer;
+    box-shadow:inset 0px 0px 0px 3px var(--highContrast);
+}
+
+.specCard{
+    border : 2px solid var(--highContrast);
+    border-radius : 10px;
+    width: 70%;
+    text-align: center;
+    display: inline-block;
+    margin: 5px;
+    padding: 20px;
+}
+
+.outputCardText{
+    display: inline-block;
+    margin: 5px;
+    text-align: center;
+}
+
+.outputCardImg{
+    border : 2px solid var(--highContrast);
+    border-radius : 10px;
+    width: 150px;
+    height: 200px;
+    display: inline-block;
+    margin: 5px;
+    text-align: center;
+}
+
+.title{
+    font-size: 30px;
+    margin: 0px;
+}
+
+.author{
+    font-size: 20px;
+    margin: 0px;
+}
+
+.summaryText{
+    font-family: var(--denseTextFont);
+    text-align: justify;
+    font-size: 16px;
+}
+
+a.linkNoStyle{
+    color: inherit;
+    text-decoration: inherit;
+}
+
+#searchButton {
+    background: var(--mid);
+}
+
+#searchButton:hover {
+    cursor: pointer;
+    background: var(--lowContrast);
+}
+
+#searchButton:focus {
+    outline: none;
+}
+
+#invertButton {
+    background-color: var(--otherBack);
+    color: var(--otherMid);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#invertButton:hover {
+    background-color: var(--otherHighlight);
+}
+
+#more_summary {
+    display: none;
+}
+
+#more_reviews {
+    display: none;
+}
+
+#more_tropes {
+    display: none;
+}
+
+.readMoreButton{
+    background-color : var(--mid);
+    color : var(--back);
+    border : none;
+    font-family : var(--titleTextFont);
+    /*border-radius : 20px;*/
+    font-size : 16px;
+    padding : 6px;
+}
+
+.readMoreButton:hover{
+    cursor: pointer;
+    background-color: var(--lowContrast);
+}
+
+.readMoreButton:focus{
+    outline: none;
+}
+
+.tropeButton {
+    color : var(--highContrast);
+    font-family : var(--denseTextFont);
+    font-size: 16px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 2px;
+    margin-left: 3px;
+    margin-right: 3px;
+    z-index: 100;
+}
+
+.tropeButton:hover{
+    cursor: pointer;
+    text-shadow: 0px 0px 2px var(--lowContrast);
+}
+
+.tropeButton:focus{
+    outline: none;
+}
+
+#Header {
+    padding-top: 50px;
+}
+
+
+/* The actual popup (appears on top) */
+.tropeButton .popuptext {
+    visibility: hidden;
+    width: 500px;
+    background-color: var(--lowContrast);
+    /*color: var(--back);*/
+    text-align: justify;
+    border-radius: 6px;
+    padding: 4px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -250px;
+}
+
+.tropePara {
+    color: var(--back);
+    text-align: justify;
+    font-weight: normal;
+    font-style: normal;
+    font-family: var(--denseTextFont);
+    font-size: 14px;
+}
+
+/* Popup arrow */
+.tropeButton .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--lowContrast) transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.tropeButton .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 0.5s;
+    animation: fadeIn 0.5s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+.reviewText {
+    font-family: var(--denseTextFont);
+    font-size: 16px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    z-index: -1;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--lowContrast);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--back);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--highContrast);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--highContrast);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.noSummary {
+    font-style: italic;
+    text-align: center;
+}

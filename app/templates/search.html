@@ -1,0 +1,324 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"> </script>
+        <link rel="stylesheet" type="text/css" href="/static/shared.css">
+
+		{% if queryType == "movie" %}
+			<link rel="stylesheet" type="text/css" href="/static/main_MB.css">
+			<title>The Book Was Better.</title>
+		{% else %}
+			<link rel="stylesheet" type="text/css" href="/static/main_BM.css">
+			<title>The Movie Was Better?</title>
+		{% endif %}
+
+		<link rel="stylesheet" type="text/css" href="/static/awesomplete/awesomplete.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="/static/awesomplete/awesomplete.js" async></script>
+	</head>
+
+	<script type="text/javascript">
+		function useSpec(queryType, query){
+			window.location.href = "/?queryType=" + queryType + "&query=" + query + "&spec=True";
+		}
+		function useInspiration(queryType, insp){
+			window.location.href = "/?queryType=" + queryType + "&query=" + insp + "&keyword=&popSlide=0";
+		}
+		function invertQueryType(queryType, query){
+			if(query === 'None'){
+				query = "";
+			}
+			if(queryType === 'book'){
+				window.location.href = "/?queryType=movie&query=";
+			}
+			else{
+				window.location.href = "/?queryType=book&query=";
+			}
+		}
+        function escapeString(string){
+            return string.replace(",", "\,").replace("'", "\'");
+        }
+
+        function readMore(type, readMoreText, readLessText) {
+            var moreText = document.getElementById("more_" + type);
+            var btnText = document.getElementById(type + "ReadMoreBtn");
+
+            if (btnText.innerHTML === readLessText) {
+                btnText.innerHTML = readMoreText;
+                moreText.style.display = "none";
+            } else {
+                btnText.innerHTML = readLessText;
+                moreText.style.display = "inline";
+            }
+        }
+
+        function removeSpaces(string){
+		    return string.replace(" ", "");
+        }
+
+        function getTropeDescription(tropeId) {
+            var popup = document.getElementById(tropeId);
+            var wasOn = popup.classList.contains("show");
+            var tropeClass = popup.className;
+            var trope_list = document.getElementsByClassName(tropeClass);
+            for (var i = 0; i < trope_list.length; i++) {
+                var trope = trope_list[i];
+                trope.classList.remove("show");
+            }
+            if (!(wasOn)) {
+                popup.classList.toggle("show");
+            }
+            if (!e) {
+            	var e = window.event;
+			    e.cancelBubble = true;
+			    if (e.stopPropagation) {
+			    	e.stopPropagation();
+			    }
+			}
+		}
+	</script>
+
+	<body>
+        {% if queryType == "movie" %}
+            <button type = "button" id="invertButton" class = "styleButton" onclick='invertQueryType("{{queryType}}", "{{query}}")'>The Movie Was Better?</button>
+        {% else %}
+            <button type = "button" id="invertButton" class = "styleButton" onclick='invertQueryType("{{queryType}}", "{{query}}")'>The Book Was Better.</button>
+        {% endif %}
+        <button type = "button" id="versionOneButton" class = "styleButton" onclick="location.href='http://the-book-was-better.herokuapp.com';">V1 Prototype</button>
+        <button type = "button" id="versionTwoButton" class = "styleButton" onclick="location.href='http://the-book-was-better-2.herokuapp.com';">V2 Prototype</button>
+
+        <div id = "Header">
+			{% if queryType == "movie" %}
+                <h1><a class="linkNoStyle" href="/">The Book Was Better.</a></h1>
+                <h2>Literature recommendations for the age of film.</h2>
+			{% else %}
+				<h1><a class="linkNoStyle" href="/?queryType=book&query=">The Movie Was Better?</a></h1>
+				<h2>Film recommendations for the post-literature age.</h2>
+			{% endif %}
+
+
+			<form id="inForm">
+  				<div class = "inFormSearch">
+                    {% if pastSearch and spec == "False" %}
+                        <input class="awesomplete" autofocus id = "inFormSearchBar" name="query" size="50" value="{{ pastSearch }}" list="validInputList" />
+                    {% else %}
+                        {% if queryType == "movie" %}
+  					        <input class="awesomplete" autofocus id = "inFormSearchBar" name="query" size="50" placeholder="Find books based on movies you like!" list="validInputList" />
+                        {% else %}
+                            <input class="awesomplete" autofocus id = "inFormSearchBar" name="query" size="50" placeholder="Find movies based on books you like!" list="validInputList" />
+                        {% endif %}
+                    {% endif %}
+                    <datalist id="validInputList">
+                        {% for query in validQueries %}
+                            <option>{{query}}</option>
+                        {% endfor %}
+                    </datalist>
+
+  					<div id = "tinyLine"></div>
+
+  					{% if pastKeyword and spec == "False" %}
+                        <input type="text" id = "inFormKeyBar" name="keyword" value="{{pastKeyword}}"/>
+                    {% else %}
+  						<input type="text" id = "inFormKeyBar" name="keyword" placeholder="with...zombies?"/>
+  					{% endif %}
+
+  					<input type="hidden" id="queryType" name="queryType" value={{queryType}}/>
+  				</div>
+  				<div>
+                    <br>
+                    Weight for...<br>
+                    Relevance <label class="switch">
+                    {% if pastPop == "1" %}
+                        <input type="checkbox" name="popSlide" value="1" checked>
+                    {% else %}
+                        <input type="checkbox" name="popSlide" value="1">
+                    {% endif %}
+                        <span class="slider round"></span>
+                    </label> Popularity
+  				</div>
+  				<div>
+                    <br>
+  					<button type="submit" id = "searchButton" class = "styleButton" value="Search!"><i class="fa fa-search"></i></button>
+  				</div>
+        	</form>
+		</div>
+
+		<div id = "Output">
+        	{% if isHomeScreen == True %}
+                {% if queryType == "movie" %}
+        		    <p>Not much of a movie buff?<br>Here's some inspiration!</p>
+                {% else %}
+                    <p>Not much of a bookworm?<br>Here's some inspiration!</p>
+                {% endif %}
+        		{% for i in inspiration %}
+        			<button type = "button" class = "styleButton" onclick="useInspiration('{{queryType}}', '{{i[1]}}'.replace('%20','+'))">{{i[0]}}</button><br>
+        		{% endfor %}
+        	{% elif spec == "False" %}
+                {% if failedSearch %}
+                    <h2>{{ failedSearch }}</h2>
+                {% endif %}
+        		{% if output %}
+		            {% for o in output %}
+                        <div class = "outputCard" onclick='useSpec("{{queryType}}",escapeString("{{o.title}}"))'>
+                        {% if o["img"]%}
+                            <div class = "outputCardImg">
+                                <img src="{{o['img']}}" width="100%" height="100%" style="border-radius:10px;">
+                            </div>
+
+                            <div class = "outputCardText" style= "width:80%;">
+                        {% else %}
+                            <div class = "outputCardText" style= "width:100%;">
+                        {% endif %}
+                            <p class = "title">{{o["title"]}}</p>
+                        {% if queryType == "movie" %}
+                            <p class = "author">{{o["author"]}}</p>
+                        {% endif %}
+                            <p><i>Ranking Score</i>: {{o["simScore"]}}</p><br>
+                            {% for trope in o["tropes"] %}
+                                <div class='tropeButton' onclick="getTropeDescription('{{ trope[2] }}')">{{trope[0]}}
+                                    <span class="popuptext" id='{{ trope[2] }}'>
+                                            {% if trope[1] %}
+                                                {% for para in trope[1] %}
+                                                    <p class="tropePara">{{ para }}</p>
+                                                {% endfor %}
+                                            {% endif %}
+                                            </span>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div> <br>
+		            {% endfor %}
+	        	{% endif %}
+	        {% else %}
+
+                <!-- SPEC CARD PAGE -->
+	        	<div class = "specCard">
+                    <!-- Title -->
+                    <p class = "title">{{spec["title"]}}</p>
+
+                    <!-- Author details -->
+                    {% if queryType == "movie" %}
+                        {% if spec["author"] or spec["year"]%}
+                            <p class = "author">
+                                {% if spec["author"]%}
+                                    {{spec["author"]}}
+                                {% endif %}
+                                {% if spec["year"]%}
+                                    ({{spec["year"]}})
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    {% else %}
+                        {% if spec["year"]%}
+                            <p class = "author">
+                                ({{spec["year"]}})
+                            </p>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Image -->
+                    {% if spec["img"]%}
+                        <div class = "outputCardImg">
+                            <img src="{{spec['img']}}" width="100%" height="100%" style="border-radius:10px;">
+                        </div>
+                    {% endif %}
+
+                    <!-- Rating -->
+                    {% if queryType == "movie" %}
+
+		        		{% if spec["rating"]%}
+                            <br><br>
+		        			<img src="/static/rating_icons/{{spec['rating']}}B.png" height="20">
+                        {% endif %}
+                    {% else %}
+                        {% if spec["rating"]%}
+                            <br><br>
+                            <img src="/static/rating_icons/{{spec['rating']}}Y.png" height="20">
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Summary -->
+                    <br>
+                    <p><i><h3>Summary</h3></i></p>
+                    {% if spec["summary"]%}
+                        <p class="summaryText">{{ spec["summary"][0] }}</p>
+
+                        {% if spec["summary"][1:]|length > 0 %}
+                            <span id="more_summary">
+                            {% for para in spec["summary"][1:] %}
+                                <p class="summaryText">{{ para }}</p>
+                            {% endfor %}
+                            </span>
+                            <button class='readMoreButton' onclick="readMore('summary', 'Read more', 'Read less')" id='summaryReadMoreBtn'>Read More</button>
+                        {% endif %}
+                    {% else %}
+                        <p class="noSummary summaryText">No summary information available.</p>
+                    {% endif %}
+
+                    <!-- Tropes -->
+                    <p><h3><i>Tropes</i></h3></p>
+
+                    {% for trope in spec["tropes"][:5] %}
+                        <div class='tropeButton' onclick="getTropeDescription('{{ trope[0] }}')">{{trope[0]}}
+                            <span class="popuptext" id='{{ trope[0] }}'>
+                            {% if trope[1] %}
+                                {% for para in trope[1] %}
+                                    <p class="tropePara">{{ para }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% if spec["tropes"][5:]|length > 0 %}
+                        <span id="more_tropes">
+                            {% for trope in spec["tropes"][5:] %}
+                                <div class='tropeButton' onclick="getTropeDescription('{{ trope[0] }}')">{{trope[0]}}
+                                <span class="popuptext" id='{{ trope[0] }}'>
+                                {% if trope[1] %}
+                                    {% for para in trope[1] %}
+                                        <p class="tropePara">{{ para }}</p>
+                                    {% endfor %}
+                                {% endif %}
+                                </span>
+                        </div>
+                            {% endfor %}
+                        </span>
+                        <br><br>
+                        <button class='readMoreButton' onclick="readMore('tropes', 'See more', 'See less')" id='tropesReadMoreBtn'>Read More</button>
+                    {% endif %}
+
+                    <!-- Reviews -->
+                    <p><i><h3>Reviews</h3></i></p>
+                    {% if spec["reviews"]%}
+
+                        {% if queryType == "movie" %}
+                            <p class="reviewText">{{spec['reviews'][0]['text'] | safe}} <br> (<img src="/static/rating_icons/{{spec['reviews'][0]['rating']}}B.png" height="12">)</p>
+                        {% else %}
+                            <p class="reviewText">{{spec['reviews'][0]['text'] | safe}} <br> (<img src="/static/rating_icons/{{spec['reviews'][0]['rating']}}Y.png" height="12">)</p>
+                        {% endif %}
+
+                        {% if spec["reviews"][1:]|length > 0 %}
+                            <span id="more_reviews">
+                            {% for review in spec["reviews"][1:] %}
+                                {% if queryType == "movie" %}
+                                    <p class="reviewText">{{review['text'] | safe}} <br>(<img src="/static/rating_icons/{{review['rating']}}B.png" height="12">)</p>
+                                {% else %}
+                                    <p class="reviewText">{{review['text'] | safe}} <br>(<img src="/static/rating_icons/{{review['rating']}}Y.png" height="12">)</p>
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                            <button class=readMoreButton onclick="readMore('reviews', 'Read more', 'Read less')" id="reviewsReadMoreBtn">Read More</button>
+                        {% endif %}
+                    {% else %}
+                        <p class="reviewText"><i>No reviews found.</i></p>
+                    {% endif %}
+                    <br>
+                    <form>
+                        <input type="button" class="styleButton" value="Go Back" onclick="history.back()">
+                    </form>
+	        	</div>
+        	{% endif %}
+		</div>
+	</body>
+</html>
