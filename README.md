@@ -1,5 +1,8 @@
 # The Book is Better Recommendation System
 
+Morgan Aloia   Evan Chen   Caleb Chiam   Alena Hutchinson   Hartek Sabharwal
+
+
 
 ## Overview
 
@@ -13,6 +16,8 @@ This application is meant to be an exploration, allowing users to find novel wor
 
 ## App Link
 The latest app could be found here: [Link](http://the-book-was-better.herokuapp.com/)
+
+
 
 
 
