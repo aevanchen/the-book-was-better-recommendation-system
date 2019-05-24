@@ -1,8 +1,8 @@
 # The Book is Better Recommendation System
 
   Front End: Morgan Aloia
-  
-  Back End: Evan Chen, Caleb Chiam, Alena Hutchinson, Hartek Sabharwal
+
+  Back End: Xingyu Chen, Caleb Chiam, Alena Hutchinson, Hartek Sabharwal
 
 
 
