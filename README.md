@@ -11,8 +11,14 @@
 The Book was Better is a recommendation system built for those fond of stories. We ask the user for movies or books that they like, along with a pertinent keyword and an optional popularity boost, and in turn give them recommendations of the converse media type.
 This application is meant to be an exploration, allowing users to find novel works specific to their tastes and current interest that they would not necessarily be otherwise exposed to.
 
-
+### main layout
 ![layout](layout.jpg)
+
+### search result : option of key word search and adding user feedback
+![search](search.jpg)
+
+### review highlighting
+![review](review.jpg)
 
 
 
